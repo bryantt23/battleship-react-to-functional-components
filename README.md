@@ -1,7 +1,8 @@
-# https://bryantt23.github.io/battleship-react/
+#
 
 https://www.theodinproject.com/courses/javascript/lessons/battleship
 
+Starting from https://github.com/bryantt23/battleship-react
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
