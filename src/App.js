@@ -3,6 +3,33 @@ import './App.css';
 import GameEngine from './components/GameEngine';
 import BoardSection from './components/BoardSection';
 
+function renderPlayerUi(
+  length,
+  playerPositionsThatHaveBeenAttacked,
+  playerBoard
+) {
+  const dom = [];
+  for (let i = 0; i < length; i++) {
+    let arr = [];
+    for (let j = 0; j < length; j++) {
+      arr.push(
+        //attacked, not attacked
+        //attacked can be hit or miss
+        //not attacked will just be the ship or sea
+        <BoardSection
+          attacked={playerPositionsThatHaveBeenAttacked[i][j]}
+          status={playerBoard[i][j]}
+          updateBoardSectionState={() => {}}
+        />
+      );
+    }
+    const div = <tr>{arr}</tr>;
+    dom.push(div);
+  }
+  console.log(dom);
+  return dom;
+}
+
 class App extends Component {
   gameEngine;
   playerBoard;
@@ -112,30 +139,6 @@ class App extends Component {
     }
   }
 
-  renderPlayerUi() {
-    const dom = [];
-    let length = this.state.playerBoard.length;
-    for (let i = 0; i < length; i++) {
-      let arr = [];
-      for (let j = 0; j < length; j++) {
-        arr.push(
-          //attacked, not attacked
-          //attacked can be hit or miss
-          //not attacked will just be the ship or sea
-          <BoardSection
-            attacked={this.state.playerPositionsThatHaveBeenAttacked[i][j]}
-            status={this.state.playerBoard[i][j]}
-            updateBoardSectionState={() => {}}
-          />
-        );
-      }
-      const div = <tr>{arr}</tr>;
-      dom.push(div);
-    }
-    console.log(dom);
-    return dom;
-  }
-
   //basically same function as renderPlayerUi
   renderComputerUi() {
     const dom = [];
@@ -180,7 +183,11 @@ class App extends Component {
   }
 
   render() {
-    const playerBoardUi = this.renderPlayerUi();
+    const playerBoardUi = renderPlayerUi(
+      this.state.playerBoard.length,
+      this.state.playerPositionsThatHaveBeenAttacked,
+      this.state.playerBoard
+    );
     const computerBoardUi = this.renderComputerUi();
     const computerBoardUiCheat = this.renderComputerUiCheat();
 
