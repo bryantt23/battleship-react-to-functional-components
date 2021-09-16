@@ -30,6 +30,24 @@ function renderPlayerUi(
   return dom;
 }
 
+function renderComputerUiCheat(length, computerBoard) {
+  const dom = [];
+  for (let i = 0; i < length; i++) {
+    let arr = [];
+    for (let j = 0; j < length; j++) {
+      arr.push(
+        <BoardSection
+          status={computerBoard[i][j]}
+          updateBoardSectionState={() => {}}
+        />
+      );
+    }
+    const div = <tr>{arr}</tr>;
+    dom.push(div);
+  }
+  return dom;
+}
+
 class App extends Component {
   gameEngine;
   playerBoard;
@@ -163,25 +181,6 @@ class App extends Component {
     return dom;
   }
 
-  renderComputerUiCheat() {
-    const dom = [];
-    let length = this.state.computerBoard.length;
-    for (let i = 0; i < length; i++) {
-      let arr = [];
-      for (let j = 0; j < length; j++) {
-        arr.push(
-          <BoardSection
-            status={this.state.computerBoard[i][j]}
-            updateBoardSectionState={() => {}}
-          />
-        );
-      }
-      const div = <tr>{arr}</tr>;
-      dom.push(div);
-    }
-    return dom;
-  }
-
   render() {
     const playerBoardUi = renderPlayerUi(
       this.state.playerBoard.length,
@@ -189,7 +188,10 @@ class App extends Component {
       this.state.playerBoard
     );
     const computerBoardUi = this.renderComputerUi();
-    const computerBoardUiCheat = this.renderComputerUiCheat();
+    const computerBoardUiCheat = renderComputerUiCheat(
+      this.state.computerBoard.length,
+      this.state.computerBoard
+    );
 
     return (
       <div className='App'>
