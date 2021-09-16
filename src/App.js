@@ -76,6 +76,28 @@ function renderComputerUiCheat(length, computerBoard) {
   return dom;
 }
 
+function computerMove(
+  computer,
+  playerPositionsThatHaveBeenAttacked,
+  playerBoard,
+  updateBoardSectionState
+) {
+  const [i, j] = computer.makePlay(playerBoard);
+
+  const attackedBoard = [...playerPositionsThatHaveBeenAttacked];
+
+  if (playerBoard.isValidAttack(i, j, attackedBoard)) {
+    updateBoardSectionState(i, j, 'playerBoard');
+  } else {
+    console.log('invalid computer move');
+    computerMove(
+      computer,
+      playerPositionsThatHaveBeenAttacked,
+      playerBoard,
+      updateBoardSectionState
+    );
+  }
+}
 class App extends Component {
   gameEngine;
   playerBoard;
@@ -116,19 +138,6 @@ class App extends Component {
       playerPositionsThatHaveBeenAttacked: arr,
       computerPositionsThatHaveBeenAttacked: arr2
     });
-  }
-
-  computerMove() {
-    const [i, j] = this.gameEngine.computer.makePlay(this.playerBoard);
-
-    const attackedBoard = [...this.state.playerPositionsThatHaveBeenAttacked];
-
-    if (this.playerBoard.isValidAttack(i, j, attackedBoard)) {
-      this.updateBoardSectionState(i, j, 'playerBoard');
-    } else {
-      console.log('invalid computer move');
-      this.computerMove();
-    }
   }
 
   updateBoardSectionState = (i, j, board) => {
@@ -177,7 +186,14 @@ class App extends Component {
           isPlayerTurn: !this.state.isPlayerTurn
         },
         () => {
-          if (!this.state.isPlayerTurn) this.computerMove();
+          if (!this.state.isPlayerTurn) {
+            computerMove(
+              this.gameEngine.computer,
+              this.state.playerPositionsThatHaveBeenAttacked,
+              this.playerBoard,
+              this.updateBoardSectionState
+            );
+          }
         }
       );
     } else {
